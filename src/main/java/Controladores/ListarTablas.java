@@ -9,7 +9,10 @@ import DAO.ServiciosTabla;
 import VO.Tabla;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -32,7 +35,7 @@ public class ListarTablas extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, URISyntaxException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             RequestDispatcher rq = request.getRequestDispatcher("LstarTablas.jsp");
@@ -64,7 +67,11 @@ public class ListarTablas extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(ListarTablas.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -78,7 +85,11 @@ public class ListarTablas extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(ListarTablas.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
