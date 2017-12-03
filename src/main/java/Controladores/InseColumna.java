@@ -11,7 +11,10 @@ import VO.Esquema;
 import VO.Tabla;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -41,6 +44,8 @@ public class InseColumna extends HttpServlet {
             }
             rq.forward(request, response);
 
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(InseColumna.class.getName()).log(Level.SEVERE, null, ex);
         }
       
     }
@@ -49,40 +54,44 @@ public class InseColumna extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         boolean resultado = false;
-
-        ServiciosTabla ser = new ServiciosTabla();
-
-        String nombre = request.getParameter("name");
-        String id = request.getParameter("idTabla");
-        String nombreES = request.getParameter("nombreEsquema");
-
-        int id_tabla = Integer.parseInt(id);
-
-        if (id.trim().length() > 0 && nombre.trim().length() > 0 && nombreES.trim().length() > 0) {
-
-            resultado = true;
-
-            Tabla r = new Tabla();
+        try {
+            boolean resultado = false;
             
-
-            ServiciosTabla st = new ServiciosTabla();
-
-            r = ser.extraerTabla(nombre);
-            Tabla t = new Tabla(id_tabla, r.getId_esquema(), nombre);
-            st.agragarTabla(t);
-
-            RequestDispatcher rq = request.getRequestDispatcher("inserTabla.jsp");
-
-            if (resultado == true) {
-                request.setAttribute("resultado", true);
+            ServiciosTabla ser = new ServiciosTabla();
+            
+            String nombre = request.getParameter("name");
+            String id = request.getParameter("idTabla");
+            String nombreES = request.getParameter("nombreEsquema");
+            
+            int id_tabla = Integer.parseInt(id);
+            
+            if (id.trim().length() > 0 && nombre.trim().length() > 0 && nombreES.trim().length() > 0) {
+                
+                resultado = true;
+                
+                Tabla r = new Tabla();
+                
+                
+                ServiciosTabla st = new ServiciosTabla();
+                
+                r = ser.extraerTabla(nombre);
+                Tabla t = new Tabla(id_tabla, r.getId_esquema(), nombre);
+                st.agragarTabla(t);
+                
+                RequestDispatcher rq = request.getRequestDispatcher("inserTabla.jsp");
+                
+                if (resultado == true) {
+                    request.setAttribute("resultado", true);
+                } else {
+                    request.setAttribute("resultado", false);
+                }
+                
+                rq.forward(request, response);
             } else {
                 request.setAttribute("resultado", false);
             }
-
-            rq.forward(request, response);
-        } else {
-            request.setAttribute("resultado", false);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(InseColumna.class.getName()).log(Level.SEVERE, null, ex);
         }
       
     }

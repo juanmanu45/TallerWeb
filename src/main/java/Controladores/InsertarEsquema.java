@@ -9,6 +9,9 @@ import DAO.ServiciosEsquema;
 import VO.Esquema;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -40,20 +43,24 @@ public class InsertarEsquema extends HttpServlet {
         int id_esquema = Integer.parseInt(id);
 
         if (id.trim().length() > 0 && nombre.trim().length() > 0) {
-            resultado = true;
-            Esquema es = new Esquema(id_esquema, nombre);
-            ServiciosEsquema ser = new ServiciosEsquema();
-            ser.agregarEsquema(es);
-
-            RequestDispatcher rq = request.getRequestDispatcher("InsertarEsquema.jsp");
-
-            if (resultado == true) {
-                request.setAttribute("resultado", true);
-            } else {
-                request.setAttribute("resultado", false);
+            try {
+                resultado = true;
+                Esquema es = new Esquema(id_esquema, nombre);
+                ServiciosEsquema ser = new ServiciosEsquema();
+                ser.agregarEsquema(es);
+                
+                RequestDispatcher rq = request.getRequestDispatcher("InsertarEsquema.jsp");
+                
+                if (resultado == true) {
+                    request.setAttribute("resultado", true);
+                } else {
+                    request.setAttribute("resultado", false);
+                }
+                
+                rq.forward(request, response);
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(InsertarEsquema.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-            rq.forward(request, response);
         } else {
             request.setAttribute("resultado", false);
         }

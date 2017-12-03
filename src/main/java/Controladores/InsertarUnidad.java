@@ -13,7 +13,10 @@ import VO.Tabla;
 import VO.Unidad;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -42,6 +45,8 @@ public class InsertarUnidad extends HttpServlet {
             }
             rq.forward(request, response);
 
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(InsertarUnidad.class.getName()).log(Level.SEVERE, null, ex);
         }
   
     }
@@ -58,42 +63,46 @@ public class InsertarUnidad extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        boolean resultado = false;
-
-        ServiciosTabla ser = new ServiciosTabla();
-
-        String nombre = request.getParameter("nombreTabla");
-        String id = request.getParameter("id_contexto");
-        String idu = request.getParameter("id_u");
-
-        int id_con = Integer.parseInt(id);
-        int id_u=Integer.parseInt(idu);
-
-        if (id.trim().length() > 0 && nombre.trim().length() > 0 && nombre.trim().length() > 0) {
-
-            resultado = true;
-
-            Tabla es=new Tabla();
+        try {
+            boolean resultado = false;
             
-
-            ServiciosUnidad st = new ServiciosUnidad();
-
-            es = ser.extraerTabla(nombre);
-
-            Unidad u= new Unidad(id_u, id_con, es.getId_tabla());
-            st.agragarUnidad(u);
-
-            RequestDispatcher rq = request.getRequestDispatcher("inUnidad.jsp");
-
-            if (resultado == true) {
-                request.setAttribute("resultado", true);
+            ServiciosTabla ser = new ServiciosTabla();
+            
+            String nombre = request.getParameter("nombreTabla");
+            String id = request.getParameter("id_contexto");
+            String idu = request.getParameter("id_u");
+            
+            int id_con = Integer.parseInt(id);
+            int id_u=Integer.parseInt(idu);
+            
+            if (id.trim().length() > 0 && nombre.trim().length() > 0 && nombre.trim().length() > 0) {
+                
+                resultado = true;
+                
+                Tabla es=new Tabla();
+                
+                
+                ServiciosUnidad st = new ServiciosUnidad();
+                
+                es = ser.extraerTabla(nombre);
+                
+                Unidad u= new Unidad(id_u, id_con, es.getId_tabla());
+                st.agragarUnidad(u);
+                
+                RequestDispatcher rq = request.getRequestDispatcher("inUnidad.jsp");
+                
+                if (resultado == true) {
+                    request.setAttribute("resultado", true);
+                } else {
+                    request.setAttribute("resultado", false);
+                }
+                
+                rq.forward(request, response);
             } else {
                 request.setAttribute("resultado", false);
             }
-
-            rq.forward(request, response);
-        } else {
-            request.setAttribute("resultado", false);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(InsertarUnidad.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }
